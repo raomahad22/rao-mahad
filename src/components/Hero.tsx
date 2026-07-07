@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Play, ArrowRight, Star } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+
+const DEFAULT_HERO = {
+  title: "Scale Your Business With Proven SEO Strategies",
+  subtitle: "I help businesses increase their organic traffic, rank higher on Google, and generate more revenue through data-driven SEO.",
+  image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+};
 
 export default function Hero() {
+  const [content, setContent] = useState(DEFAULT_HERO);
+
+  useEffect(() => {
+    async function fetchHeroContent() {
+      try {
+        const { data, error } = await supabase.from('site_content').select('content').eq('section', 'hero').single();
+        if (!error && data?.content) {
+          setContent(data.content);
+        }
+      } catch (err) {
+        console.error("Error fetching hero content", err);
+      }
+    }
+    
+    if (import.meta.env.VITE_SUPABASE_URL) {
+      fetchHeroContent();
+    }
+  }, []);
+
   return (
     <section id="home" className="pt-36 lg:pt-48 pb-0 overflow-hidden bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -22,11 +48,10 @@ export default function Hero() {
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-main leading-[1.1] mb-6">
               I'm <span className="text-accent underline decoration-4 underline-offset-8">Mahad SEO,</span><br />
-              SEO Expert<br />
-              Based in Worldwide.
+              {content.title}
             </h1>
             <p className="text-lg text-text-muted mb-10 leading-relaxed max-w-lg">
-              I'm an experienced SEO Specialist with 5+ years in the field, collaborating with various companies and startups to drive organic growth.
+              {content.subtitle}
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center bg-primary text-white rounded-full p-1 pr-6 hover:bg-primary-dark transition-colors cursor-pointer group">
@@ -54,7 +79,7 @@ export default function Hero() {
             <div className="relative w-full max-w-md aspect-square">
               <div className="absolute inset-4 bg-accent rounded-full transform -translate-x-4 translate-y-4"></div>
               <img 
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                src={content.image} 
                 alt="Mahad" 
                 className="absolute inset-0 w-full h-full object-cover rounded-full z-10 border-8 border-white"
               />

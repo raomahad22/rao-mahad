@@ -61,7 +61,7 @@ export default function Portfolio() {
             </h2>
           </div>
           
-          <a href="#contact" className="inline-flex items-center bg-primary text-white pl-6 pr-2 py-2 rounded-full font-semibold hover:bg-primary-dark transition-colors group">
+          <a href="/projects" className="inline-flex items-center bg-primary text-white pl-6 pr-2 py-2 rounded-full font-semibold hover:bg-primary-dark transition-colors group">
             View All Projects
             <div className="w-8 h-8 ml-3 bg-accent rounded-full flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <ArrowRight size={16} />

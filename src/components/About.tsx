@@ -1,8 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+
+const DEFAULT_ABOUT = {
+  title: "Who is Mahad SEO?",
+  description: "I am a results-driven SEO specialist dedicated to helping businesses scale organically. With a deep understanding of search algorithms and a strict adherence to white-hat techniques, I build strategies that deliver sustainable, long-term traffic and revenue growth.",
+  image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  stat1_value: "100+",
+  stat1_label: "Projects Completed",
+  stat2_value: "50M+",
+  stat2_label: "Organic Traffic Generated",
+  stat3_value: "5+",
+  stat3_label: "Years Experience"
+};
 
 export default function About() {
+  const [content, setContent] = useState(DEFAULT_ABOUT);
+
+  useEffect(() => {
+    async function fetchAboutContent() {
+      try {
+        const { data, error } = await supabase.from('site_content').select('content').eq('section', 'about').single();
+        if (!error && data?.content) {
+          setContent(data.content);
+        }
+      } catch (err) {
+        console.error("Error fetching about content", err);
+      }
+    }
+    if (import.meta.env.VITE_SUPABASE_URL) {
+      fetchAboutContent();
+    }
+  }, []);
+
   return (
     <section id="about" className="py-24 bg-primary text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +48,7 @@ export default function About() {
             <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
               <div className="absolute inset-0 bg-accent rounded-full"></div>
               <img 
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                src={content.image} 
                 alt="Mahad SEO" 
                 className="absolute inset-0 w-full h-full object-cover rounded-full transform -translate-y-4 translate-x-4 border-8 border-primary"
               />
@@ -47,37 +78,31 @@ export default function About() {
             </div>
             
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Who is <span className="text-accent">Mahad SEO?</span>
+              {content.title}
             </h2>
             
             <p className="text-white/80 text-lg leading-relaxed mb-10">
-              I am a results-driven SEO specialist dedicated to helping businesses scale organically. With a deep understanding of search algorithms and a strict adherence to white-hat techniques, I build strategies that deliver sustainable, long-term traffic and revenue growth.
+              {content.description}
             </p>
             
             <div className="grid grid-cols-3 gap-6 mb-10">
               <div>
-                <h4 className="text-3xl font-bold text-accent mb-1">100+</h4>
-                <p className="text-sm text-white/60">Projects Completed</p>
+                <h4 className="text-3xl font-bold text-accent mb-1">{content.stat1_value}</h4>
+                <p className="text-sm text-white/60">{content.stat1_label}</p>
               </div>
               <div>
-                <h4 className="text-3xl font-bold text-accent mb-1">50+</h4>
-                <p className="text-sm text-white/60">Industry Covered</p>
+                <h4 className="text-3xl font-bold text-accent mb-1">{content.stat2_value}</h4>
+                <p className="text-sm text-white/60">{content.stat2_label}</p>
               </div>
               <div>
-                <h4 className="text-3xl font-bold text-accent mb-1">5+</h4>
-                <p className="text-sm text-white/60">Years of Experience</p>
+                <h4 className="text-3xl font-bold text-accent mb-1">{content.stat3_value}</h4>
+                <p className="text-sm text-white/60">{content.stat3_label}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-6">
-              <a href="#contact" className="inline-flex items-center bg-transparent border border-white text-white pl-6 pr-2 py-2 rounded-full font-semibold hover:bg-white hover:text-primary transition-colors group">
-                Download CV
-                <div className="w-8 h-8 ml-3 bg-accent rounded-full flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-                  <ArrowRight size={16} />
-                </div>
-              </a>
-              <span className="text-accent font-serif italic text-2xl">Mahad</span>
-            </div>
+            <a href="#contact" className="inline-flex items-center gap-2 bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-accent hover:text-white transition-colors">
+              Get in Touch <ArrowRight size={20} />
+            </a>
           </motion.div>
         </div>
       </div>

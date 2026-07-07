@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
+import AllProjects from './pages/AllProjects';
 import AdminDashboard from './pages/Admin/Dashboard';
 import Login from './pages/Admin/Login';
 import { supabase } from './lib/supabase';
@@ -32,6 +33,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<AllProjects />} />
         <Route path="/admin/login" element={!session ? <Login /> : <Navigate to="/admin" />} />
         <Route path="/admin/*" element={session ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
       </Routes>
