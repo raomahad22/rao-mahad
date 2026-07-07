@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Star } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
-const TESTIMONIALS = [
+const DEFAULT_TESTIMONIALS = [
   {
     text: "Mahad completely transformed our organic presence. Within 6 months, our non-branded traffic tripled, and we secured top rankings. Highly recommend his services.",
     name: "Sarah Jenkins",
@@ -27,6 +28,25 @@ const TESTIMONIALS = [
 ];
 
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState(DEFAULT_TESTIMONIALS);
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const { data, error } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+        if (!error && data && data.length > 0) {
+          setTestimonials(data);
+        }
+      } catch (err) {
+        console.error("Error fetching testimonials", err);
+      }
+    }
+    
+    if (import.meta.env.VITE_SUPABASE_URL) {
+      fetchTestimonials();
+    }
+  }, []);
+
   return (
     <section id="testimonials" className="py-24 bg-gradient-to-b from-white to-[#F8F9FA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +65,7 @@ export default function Testimonials() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {TESTIMONIALS.map((testimonial, index) => (
+          {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -66,7 +86,7 @@ export default function Testimonials() {
               </p>
               
               <div className="flex items-center gap-4">
-                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full" />
+                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
                 <div>
                   <h4 className="font-bold text-text-main text-sm">{testimonial.name}</h4>
                   <p className="text-xs text-text-muted">{testimonial.role}</p>
