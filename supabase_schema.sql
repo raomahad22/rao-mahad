@@ -93,3 +93,14 @@ ON CONFLICT DO NOTHING;
 INSERT INTO site_content (section, content) VALUES
 ('hero', '{"title": "Scale Your Business With Proven SEO Strategies", "subtitle": "I help businesses increase their organic traffic, rank higher on Google, and generate more revenue through data-driven SEO.", "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"}')
 ON CONFLICT (section) DO UPDATE SET content = EXCLUDED.content;
+
+-- ==========================================
+-- IMPORTANT: DISABLE RLS (Row Level Security)
+-- Run these commands so your admin panel can save data!
+-- ==========================================
+ALTER TABLE projects DISABLE ROW LEVEL SECURITY;
+ALTER TABLE services DISABLE ROW LEVEL SECURITY;
+ALTER TABLE tools DISABLE ROW LEVEL SECURITY;
+ALTER TABLE testimonials DISABLE ROW LEVEL SECURITY;
+ALTER TABLE contacts DISABLE ROW LEVEL SECURITY;
+ALTER TABLE site_content DISABLE ROW LEVEL SECURITY;

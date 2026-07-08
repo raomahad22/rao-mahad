@@ -61,9 +61,11 @@ export default function HeroAdmin() {
       const { data } = await supabase.from('site_content').select('id').eq('section', 'hero').single();
       
       if (data) {
-        await supabase.from('site_content').update({ content }).eq('section', 'hero');
+        const { error } = await supabase.from('site_content').update({ content }).eq('section', 'hero');
+        if (error) throw error;
       } else {
-        await supabase.from('site_content').insert([{ section: 'hero', content }]);
+        const { error } = await supabase.from('site_content').insert([{ section: 'hero', content }]);
+        if (error) throw error;
       }
       alert('Hero section updated successfully!');
     } catch (err) {
