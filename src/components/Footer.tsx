@@ -122,9 +122,6 @@ export default function Footer() {
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             <a 
               href="/admin" 
-              onClick={(e) => {
-                localStorage.setItem('admin_email', 'raomahad22@gmail.com');
-              }}
               className="hover:text-white transition-colors"
             >
               Admin
