@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { uploadToCloudinary } from '../../lib/cloudinary';
 import { Save, Image as ImageIcon } from 'lucide-react';
+import ImageCropDialog from '../../components/ImageCropDialog';
 
 const DEFAULT_ABOUT = {
   title: "Who is Mahad SEO?",
@@ -20,6 +21,7 @@ export default function AboutAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [cropImageFile, setCropImageFile] = useState<string | null>(null);
 
   useEffect(() => {
     fetchContent();
@@ -33,11 +35,23 @@ export default function AboutAdmin() {
     setLoading(false);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropImageFile(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    setCropImageFile(null);
     setUploadingImage(true);
     try {
-      const url = await uploadToCloudinary(e.target.files[0]);
+      const file = new File([croppedBlob], "cropped.jpg", { type: "image/jpeg" });
+      const url = await uploadToCloudinary(file);
       setContent({ ...content, image: url });
     } catch (error) {
       console.error('Upload failed', error);
@@ -167,12 +181,21 @@ export default function AboutAdmin() {
                 <label className="bg-gray-100 hover:bg-gray-200 transition-colors px-4 py-2 rounded-md cursor-pointer flex items-center gap-2 text-sm font-medium inline-flex">
                   <ImageIcon size={18} />
                   {uploadingImage ? 'Uploading...' : 'Upload New Image'}
-                  <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
+                  <input type="file" className="hidden" accept="image/*" onChange={handleImageSelect} disabled={uploadingImage} />
                 </label>
               </div>
             </div>
           </div>
         </div>
+
+        {cropImageFile && (
+          <ImageCropDialog
+            imageSrc={cropImageFile}
+            onCropComplete={handleCropComplete}
+            onCancel={() => setCropImageFile(null)}
+            aspectRatio={1}
+          />
+        )}
       </div>
     </div>
   );

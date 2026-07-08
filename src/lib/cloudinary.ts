@@ -3,7 +3,13 @@ export async function uploadToCloudinary(file: File): Promise<string> {
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   if (!cloudName || !uploadPreset) {
-    throw new Error('Cloudinary environment variables are missing');
+    console.warn('Cloudinary environment variables are missing, falling back to base64 encoding.');
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
 
   const formData = new FormData();
