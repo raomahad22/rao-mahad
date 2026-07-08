@@ -16,8 +16,26 @@ export default function TestimonialsAdmin() {
 
   const fetchTestimonials = async () => {
     const { data, error } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
-    if (!error && data) {
+    
+    const defaultTestimonials = [
+      { id: '1', text: "Mahad completely transformed our organic presence. Within 6 months, our non-branded traffic tripled, and we secured top rankings. Highly recommend his services.", name: "Sarah Jenkins", role: "CMO, TechGrowth Solutions", rating: 5, avatar: "https://ui-avatars.com/api/?name=Sarah+Jenkins&background=2A4B37&color=fff" },
+      { id: '2', text: "The quality of backlinks Mahad secures is unparalleled. We were struggling to build authority in a crowded niche, and his manual outreach strategy delivered amazing results.", name: "David Chen", role: "Founder, E-Commerce Direct", rating: 5, avatar: "https://ui-avatars.com/api/?name=David+Chen&background=F4A222&color=fff" },
+      { id: '3', text: "Working with Mahad was the best marketing decision we made this year. He doesn't focus on vanity metrics; he focuses on traffic that actually converts.", name: "Michael Ross", role: "Director of Marketing, LegalPro", rating: 5, avatar: "https://ui-avatars.com/api/?name=Michael+Ross&background=1E3728&color=fff" }
+    ];
+
+    if (!error && data && data.length > 0) {
       setTestimonials(data);
+    } else {
+      if (!error && data && data.length === 0) {
+        await supabase.from('testimonials').insert(defaultTestimonials.map(({id, ...rest}) => rest));
+        const { data: newData } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+        if (newData && newData.length > 0) {
+          setTestimonials(newData);
+          setLoading(false);
+          return;
+        }
+      }
+      setTestimonials(defaultTestimonials);
     }
     setLoading(false);
   };
