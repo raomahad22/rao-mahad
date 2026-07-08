@@ -7,14 +7,16 @@ import ContactsAdmin from './ContactsAdmin';
 import TestimonialsAdmin from './TestimonialsAdmin';
 import HeroAdmin from './HeroAdmin';
 import AboutAdmin from './AboutAdmin';
+import SettingsAdmin from './SettingsAdmin';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [seeding, setSeeding] = useState(false);
 
   const handleLogout = async () => {
+    localStorage.removeItem('admin_email');
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    window.location.href = '/admin/login';
   };
 
   const handleSeedData = async () => {
@@ -111,6 +113,7 @@ export default function AdminDashboard() {
           <Link to="/admin/services" className="block px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary font-medium">Manage Services</Link>
           <Link to="/admin/testimonials" className="block px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary font-medium">Manage Reviews</Link>
           <Link to="/admin/contacts" className="block px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary font-medium">Manage Contacts</Link>
+          <Link to="/admin/settings" className="block px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary font-medium">Manage Settings</Link>
           <button 
             onClick={handleLogout}
             className="w-full text-left px-6 py-3 text-red-600 hover:bg-red-50 font-medium mt-auto"
@@ -155,6 +158,7 @@ export default function AdminDashboard() {
           <Route path="/services" element={<ServicesAdmin />} />
           <Route path="/testimonials" element={<TestimonialsAdmin />} />
           <Route path="/contacts" element={<ContactsAdmin />} />
+          <Route path="/settings" element={<SettingsAdmin />} />
         </Routes>
       </main>
     </div>

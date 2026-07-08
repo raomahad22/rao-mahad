@@ -11,6 +11,14 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for hardcoded admin bypass
+    const bypassEmail = localStorage.getItem('admin_email');
+    if (bypassEmail === 'raomahad22@gmail.com') {
+      setSession({ user: { email: bypassEmail } });
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
@@ -19,10 +27,24 @@ export default function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (!localStorage.getItem('admin_email')) {
+        setSession(session);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'e') {
+        e.preventDefault();
+        window.location.href = '/admin';
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (loading) {

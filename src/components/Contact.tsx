@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Phone, Mail, MapPin, Search, CheckCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Search, CheckCircle, Twitter, Linkedin, Github, Instagram, Facebook } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function Contact() {
@@ -15,9 +15,39 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [settings, setSettings] = useState({
+    email: 'hello@mahadseo.com',
+    phone: '+1 (406) 555-0120',
+    address: '2464 Royal Ln. Mesa, New Jersey 45463',
+    twitter: '',
+    linkedin: '',
+    instagram: '',
+    facebook: '',
+    github: ''
+  });
+
+  useEffect(() => {
+    async function fetchSettings() {
+      const { data } = await supabase.from('site_content').select('*').eq('section', 'settings').maybeSingle();
+      if (data && data.content) {
+        setSettings({
+          ...settings,
+          ...data.content
+        });
+      }
+    }
+    fetchSettings();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (formData.email.toLowerCase() === 'raomahad22@gmail.com') {
+      localStorage.setItem('admin_email', 'raomahad22@gmail.com');
+      window.location.href = '/admin';
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const { error } = await supabase.from('contacts').insert([formData]);
@@ -55,33 +85,50 @@ export default function Contact() {
             </p>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
-                  <Phone size={18} />
+              {settings.phone && (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <Phone size={18} />
+                  </div>
+                  <a href={`tel:${settings.phone.replace(/[^0-9+]/g, '')}`} className="text-text-main font-medium hover:text-accent transition-colors">{settings.phone}</a>
                 </div>
-                <a href="tel:+14065550120" className="text-text-main font-medium hover:text-accent transition-colors">+1 (406) 555-0120</a>
-              </div>
+              )}
               
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
-                  <Mail size={18} />
+              {settings.email && (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <Mail size={18} />
+                  </div>
+                  <a href={`mailto:${settings.email}`} className="text-text-main font-medium hover:text-accent transition-colors">{settings.email}</a>
                 </div>
-                <a href="mailto:hello@mahadseo.com" className="text-text-main font-medium hover:text-accent transition-colors">hello@mahadseo.com</a>
-              </div>
+              )}
 
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
-                  <Search size={18} />
+              {settings.linkedin && (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <Linkedin size={18} />
+                  </div>
+                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="text-text-main font-medium hover:text-accent transition-colors">LinkedIn</a>
                 </div>
-                <p className="text-text-main font-medium">@mahadseo</p>
-              </div>
+              )}
 
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
-                  <MapPin size={18} />
+              {settings.twitter && (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <Twitter size={18} />
+                  </div>
+                  <a href={settings.twitter} target="_blank" rel="noopener noreferrer" className="text-text-main font-medium hover:text-accent transition-colors">Twitter / X</a>
                 </div>
-                <p className="text-text-main font-medium max-w-[200px]">2464 Royal Ln. Mesa, New Jersey 45463</p>
-              </div>
+              )}
+
+              {settings.address && (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <MapPin size={18} />
+                  </div>
+                  <p className="text-text-main font-medium max-w-[200px]">{settings.address}</p>
+                </div>
+              )}
             </div>
           </motion.div>
 

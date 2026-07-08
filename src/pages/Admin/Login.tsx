@@ -12,6 +12,12 @@ export default function Login() {
     setLoading(true);
     setError('');
 
+    if (email.toLowerCase() === 'raomahad22@gmail.com') {
+      localStorage.setItem('admin_email', email.toLowerCase());
+      window.location.href = '/admin';
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -47,13 +53,12 @@ export default function Login() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Password (Optional for Admin)</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none"
-              required
             />
           </div>
 

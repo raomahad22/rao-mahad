@@ -1,7 +1,30 @@
-import React from 'react';
-import { Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Twitter, Linkedin, Github, Mail, Instagram, Facebook } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function Footer() {
+  const [settings, setSettings] = useState({
+    email: 'hello@mahadseo.com',
+    linkedin: '#',
+    twitter: '#',
+    github: '',
+    instagram: '',
+    facebook: ''
+  });
+
+  useEffect(() => {
+    async function fetchSettings() {
+      const { data } = await supabase.from('site_content').select('*').eq('section', 'settings').maybeSingle();
+      if (data && data.content) {
+        setSettings({
+          ...settings,
+          ...data.content
+        });
+      }
+    }
+    fetchSettings();
+  }, []);
+
   return (
     <footer className="bg-accent text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,16 +36,37 @@ export default function Footer() {
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Data-driven organic growth strategies for ambitious brands. Specializing in technical SEO, content strategy, and high-authority link building.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
-                <Linkedin size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
-                <Twitter size={18} />
-              </a>
-              <a href="mailto:hello@mahadseo.com" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
-                <Mail size={18} />
-              </a>
+            <div className="flex gap-4 flex-wrap">
+              {settings.linkedin && (
+                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Linkedin size={18} />
+                </a>
+              )}
+              {settings.twitter && (
+                <a href={settings.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Twitter size={18} />
+                </a>
+              )}
+              {settings.github && (
+                <a href={settings.github} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Github size={18} />
+                </a>
+              )}
+              {settings.instagram && (
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Instagram size={18} />
+                </a>
+              )}
+              {settings.facebook && (
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Facebook size={18} />
+                </a>
+              )}
+              {settings.email && (
+                <a href={`mailto:${settings.email}`} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                  <Mail size={18} />
+                </a>
+              )}
             </div>
           </div>
 

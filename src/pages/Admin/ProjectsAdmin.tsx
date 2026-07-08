@@ -17,8 +17,22 @@ export default function ProjectsAdmin() {
 
   const fetchProjects = async () => {
     const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-    if (!error && data) {
+    if (!error && data && data.length > 0) {
       setProjects(data);
+    } else if (!error && data && data.length === 0) {
+      // Auto-seed default projects if empty so user can see them
+      const defaultProjects = [
+        { title: 'Scaling Organic Acquisition for FinTech SaaS', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', tags: ['Guest Posting', 'Content Strategy'] },
+        { title: 'Dominating SERPs for Luxury Retailer', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', tags: ['Link Building', 'E-commerce'] },
+        { title: 'Unlocking Local Dominance for Law Firm', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', tags: ['Local SEO', 'GBP Optimization'] },
+        { title: 'Site Speed & Core Web Vitals Optimization', image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', tags: ['Technical SEO', 'Audits'] }
+      ];
+      await supabase.from('projects').insert(defaultProjects);
+      
+      const { data: newData } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+      if (newData) {
+        setProjects(newData);
+      }
     }
     setLoading(false);
   };
