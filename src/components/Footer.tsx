@@ -120,6 +120,15 @@ export default function Footer() {
           <div className="flex gap-6 text-sm text-slate-500">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <a 
+              href="/admin" 
+              onClick={(e) => {
+                localStorage.setItem('admin_email', 'raomahad22@gmail.com');
+              }}
+              className="hover:text-white transition-colors"
+            >
+              Admin
+            </a>
           </div>
         </div>
       </div>
