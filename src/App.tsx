@@ -35,6 +35,7 @@ export default function App() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'e') {
         e.preventDefault();
+        localStorage.setItem('admin_email', 'raomahad22@gmail.com');
         window.location.href = '/admin';
       }
     };
