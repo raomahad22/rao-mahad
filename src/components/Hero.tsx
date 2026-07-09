@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { Play, ArrowRight, Star } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -54,12 +55,12 @@ export default function Hero() {
               {content.subtitle}
             </p>
             <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center bg-primary text-white rounded-full p-1 pr-6 hover:bg-primary-dark transition-colors cursor-pointer group">
-                <a href="#portfolio" className="font-semibold text-sm pl-5 pr-4 py-3">View My Portfolio</a>
+              <Link to="/projects" className="flex items-center bg-primary text-white rounded-full p-1 pr-6 hover:bg-primary-dark transition-colors cursor-pointer group">
+                <span className="font-semibold text-sm pl-5 pr-4 py-3">View My Portfolio</span>
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
                   <Play size={18} fill="currentColor" />
                 </div>
-              </div>
+              </Link>
               <a
                 href="#contact"
                 className="inline-flex justify-center items-center px-8 py-3.5 bg-white text-primary border-2 border-primary rounded-full font-bold hover:bg-primary hover:text-white transition-colors"

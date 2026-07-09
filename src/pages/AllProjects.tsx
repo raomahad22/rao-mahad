@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ExternalLink, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function AllProjects() {
   const [projects, setProjects] = useState<any[]>([]);
@@ -32,9 +34,9 @@ export default function AllProjects() {
       <main className="pt-36 pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <a href="/" className="inline-flex items-center gap-2 text-primary hover:text-accent font-semibold transition-colors mb-6">
+            <Link to="/" className="inline-flex items-center gap-2 text-primary hover:text-accent font-semibold transition-colors mb-6">
               <ArrowLeft size={20} /> Back to Home
-            </a>
+            </Link>
             <h1 className="text-4xl md:text-5xl font-bold text-text-main mb-6">All Projects</h1>
             <p className="text-lg text-text-muted max-w-2xl">
               Explore my complete portfolio of successful SEO campaigns and digital marketing projects.
@@ -95,6 +97,7 @@ export default function AllProjects() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

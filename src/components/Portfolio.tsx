@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const DEFAULT_PORTFOLIO = [
@@ -61,12 +62,12 @@ export default function Portfolio() {
             </h2>
           </div>
           
-          <a href="/projects" className="inline-flex items-center bg-primary text-white pl-6 pr-2 py-2 rounded-full font-semibold hover:bg-primary-dark transition-colors group">
+          <Link to="/projects" className="inline-flex items-center bg-primary text-white pl-6 pr-2 py-2 rounded-full font-semibold hover:bg-primary-dark transition-colors group">
             View All Projects
             <div className="w-8 h-8 ml-3 bg-accent rounded-full flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <ArrowRight size={16} />
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
