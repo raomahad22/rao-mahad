@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const DEFAULT_TESTIMONIALS = [
@@ -29,6 +29,7 @@ const DEFAULT_TESTIMONIALS = [
 
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState(DEFAULT_TESTIMONIALS);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     async function fetchTestimonials() {
@@ -47,53 +48,92 @@ export default function Testimonials() {
     }
   }, []);
 
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? Math.max(0, testimonials.length - 3) : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex >= testimonials.length - 3 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Get active 3 testimonials to display
+  const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + 3);
+
+  // If there are less than 3 testimonials overall, fallback to index slice safety
+  const displayList = visibleTestimonials.length < 3 && testimonials.length >= 3
+    ? testimonials.slice(testimonials.length - 3)
+    : visibleTestimonials;
+
   return (
-    <section id="testimonials" className="py-24 bg-gradient-to-b from-white to-[#F8F9FA]">
+    <section id="testimonials" className="py-24 bg-gradient-to-b from-white to-[#F8F9FA] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-4 h-0.5 bg-accent"></span>
-            <p className="text-accent font-semibold text-sm uppercase tracking-wider">Client Testimonials</p>
-            <span className="w-4 h-0.5 bg-accent"></span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-4 h-0.5 bg-accent"></span>
+              <p className="text-accent font-semibold text-sm uppercase tracking-wider">Client Testimonials</p>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-text-main">
+              The Impact of My Work: <span className="text-accent italic font-medium">Client Reviews</span>
+            </h2>
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-text-main mb-4">
-            The Impact of My Work:
-          </h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-accent italic">
-            Client Testimonials
-          </h3>
+
+          {/* Slider Controls */}
+          {testimonials.length > 3 && (
+            <div className="flex gap-3">
+              <button 
+                onClick={handlePrev}
+                className="w-12 h-12 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all shadow-sm"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={handleNext}
+                className="w-12 h-12 rounded-full bg-primary text-white hover:bg-primary-dark flex items-center justify-center transition-all shadow-md"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-shadow"
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                ))}
-                <span className="ml-2 font-bold text-text-main">{testimonial.rating}.0</span>
-              </div>
-              
-              <p className="text-text-muted leading-relaxed mb-8 text-sm">
-                {testimonial.text}
-              </p>
-              
-              <div className="flex items-center gap-4">
-                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
+        <div className="relative">
+          <div className="grid md:grid-cols-3 gap-8 transition-all duration-300">
+            {displayList.map((testimonial, idx) => (
+              <motion.div
+                key={testimonial.id || idx}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-shadow flex flex-col justify-between min-h-[280px]"
+              >
                 <div>
-                  <h4 className="font-bold text-text-main text-sm">{testimonial.name}</h4>
-                  <p className="text-xs text-text-muted">{testimonial.role}</p>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-accent text-accent" />
+                    ))}
+                    <span className="ml-2 font-bold text-text-main">{testimonial.rating}.0</span>
+                  </div>
+                  
+                  <p className="text-text-muted leading-relaxed mb-6 text-sm italic">
+                    "{testimonial.text}"
+                  </p>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                
+                <div className="flex items-center gap-4 border-t pt-4">
+                  <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover border" />
+                  <div>
+                    <h4 className="font-bold text-text-main text-sm">{testimonial.name}</h4>
+                    <p className="text-xs text-text-muted">{testimonial.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
