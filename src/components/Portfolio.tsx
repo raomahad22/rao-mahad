@@ -84,7 +84,7 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5, zIndex: 20 }}
+                whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                 onClick={() => setSelectedProject(item)}
                 className="bg-white rounded-[32px] overflow-hidden p-6 hover:shadow-2xl transition-all duration-300 group relative cursor-pointer"
               >
@@ -128,10 +128,10 @@ export default function Portfolio() {
             onClick={() => setSelectedProject(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.8, y: 30 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="bg-white rounded-3xl p-6 sm:p-10 max-w-2xl w-full shadow-2xl relative text-left overflow-y-auto max-h-[90vh]"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >

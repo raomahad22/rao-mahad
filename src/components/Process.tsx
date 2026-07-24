@@ -67,7 +67,7 @@ export default function Process() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.1, y: -8 }}
+                  whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                   onClick={() => setSelectedStep({ ...step, stepNumber: index + 1 })}
                   className="flex flex-col items-center text-center group transition-all duration-300 cursor-pointer"
                 >
@@ -98,10 +98,10 @@ export default function Process() {
             onClick={() => setSelectedStep(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.8, y: 30 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full shadow-2xl relative text-left"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >

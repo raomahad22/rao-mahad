@@ -111,7 +111,7 @@ export default function Testimonials() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4 }}
-                  whileHover={{ scale: 1.05, y: -5, zIndex: 20 }}
+                  whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                   onClick={() => setSelectedTestimonial(testimonial)}
                   className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between min-h-[280px] cursor-pointer relative"
                 >
@@ -154,10 +154,10 @@ export default function Testimonials() {
             onClick={() => setSelectedTestimonial(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.8, y: 30 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full shadow-2xl relative text-left"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >

@@ -125,7 +125,7 @@ export default function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                whileHover={{ scale: 1.05, y: -5, zIndex: 20 }}
+                whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                 onClick={() => setSelectedService(service)}
                 className="bg-[#F8F9FA] rounded-2xl p-4 sm:p-5 hover:shadow-2xl transition-all duration-300 group cursor-pointer hover:bg-primary hover:text-white relative"
               >
@@ -154,10 +154,10 @@ export default function Services() {
             onClick={() => setSelectedService(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.8, y: 30 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full shadow-2xl relative"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
