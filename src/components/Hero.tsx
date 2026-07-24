@@ -45,7 +45,7 @@ export default function Hero() {
               <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-accent border-2 border-white rounded-sm"></div>
               <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-accent border-2 border-white rounded-sm"></div>
               <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-accent border-2 border-white rounded-sm"></div>
-              <span className="font-semibold text-text-muted">Hello There!</span>
+              <span className="font-semibold text-text-muted">{content.greeting || "Hello There!"}</span>
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-main leading-[1.1] mb-6">
               I'm <span className="text-accent underline decoration-4 underline-offset-8">Mahad SEO,</span><br />
@@ -91,7 +91,7 @@ export default function Hero() {
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 className="absolute top-10 -right-4 z-20 bg-primary text-white text-xs font-bold px-4 py-2 rounded-full border-2 border-white shadow-lg flex items-center gap-1"
               >
-                <Star size={12} className="text-accent" fill="currentColor" /> SEO Specialist
+                <Star size={12} className="text-accent" fill="currentColor" /> {content.badge1 || "SEO Specialist"}
               </motion.div>
               
               <motion.div 
@@ -99,11 +99,11 @@ export default function Hero() {
                 transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
                 className="absolute bottom-12 -left-8 z-20 bg-accent text-white text-sm font-bold px-5 py-2.5 rounded-full border-4 border-white shadow-lg"
               >
-                Organic Growth
+                {content.badge2 || "Organic Growth"}
               </motion.div>
               
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-20 bg-primary text-white text-sm font-bold px-6 py-2 rounded-full">
-                SEO Expert
+                {content.badge3 || "SEO Expert"}
               </div>
             </div>
           </motion.div>

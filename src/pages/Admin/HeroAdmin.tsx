@@ -7,11 +7,15 @@ import ImageCropDialog from '../../components/ImageCropDialog';
 const DEFAULT_HERO = {
   title: "SEO Expert\nBased in Worldwide.",
   subtitle: "I'm an experienced SEO Specialist with 5+ years in the field, collaborating with various companies and startups to drive organic growth.",
-  image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  greeting: "Hello There!",
+  badge1: "SEO Specialist",
+  badge2: "Organic Growth",
+  badge3: "SEO Expert"
 };
 
 export default function HeroAdmin() {
-  const [content, setContent] = useState(DEFAULT_HERO);
+  const [content, setContent] = useState<any>(DEFAULT_HERO);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -24,7 +28,8 @@ export default function HeroAdmin() {
   const fetchContent = async () => {
     const { data, error } = await supabase.from('site_content').select('content').eq('section', 'hero').single();
     if (!error && data?.content) {
-      setContent(data.content);
+      // Merge with default values in case keys like greeting or badges don't exist in existing DB records yet
+      setContent({ ...DEFAULT_HERO, ...data.content });
     }
     setLoading(false);
   };
@@ -75,7 +80,7 @@ export default function HeroAdmin() {
     setSaving(false);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="p-6">Loading...</p>;
 
   return (
     <div>
@@ -84,7 +89,7 @@ export default function HeroAdmin() {
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-70"
+          className="bg-primary text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-70 font-semibold"
         >
           <Save size={18} /> {saving ? 'Saving...' : 'Save Changes'}
         </button>
@@ -92,33 +97,76 @@ export default function HeroAdmin() {
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-3xl">
         <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Greeting Text</label>
+              <input 
+                type="text"
+                value={content.greeting || ''}
+                onChange={e => setContent({...content, greeting: e.target.value})}
+                className="w-full border p-2.5 rounded-md focus:ring-2 focus:ring-primary outline-none"
+                placeholder="Ex: Hello There!"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Badge 1 (Top-Right on Image)</label>
+              <input 
+                type="text"
+                value={content.badge1 || ''}
+                onChange={e => setContent({...content, badge1: e.target.value})}
+                className="w-full border p-2.5 rounded-md focus:ring-2 focus:ring-primary outline-none"
+                placeholder="Ex: SEO Specialist"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Badge 2 (Bottom-Left on Image)</label>
+              <input 
+                type="text"
+                value={content.badge2 || ''}
+                onChange={e => setContent({...content, badge2: e.target.value})}
+                className="w-full border p-2.5 rounded-md focus:ring-2 focus:ring-primary outline-none"
+                placeholder="Ex: Organic Growth"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Badge 3 (Bottom-Center on Image)</label>
+              <input 
+                type="text"
+                value={content.badge3 || ''}
+                onChange={e => setContent({...content, badge3: e.target.value})}
+                className="w-full border p-2.5 rounded-md focus:ring-2 focus:ring-primary outline-none"
+                placeholder="Ex: SEO Expert"
+              />
+            </div>
+          </div>
+
           <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
+            <label className="block text-sm font-medium mb-1">Main Title</label>
             <textarea 
               value={content.title}
               onChange={e => setContent({...content, title: e.target.value})}
               className="w-full border p-3 rounded-md focus:ring-2 focus:ring-primary outline-none"
               rows={2}
-              placeholder="Ex. SEO Expert Based in Worldwide."
+              placeholder="Ex. Scale Your Business With Proven SEO..."
             />
             <p className="text-xs text-gray-500 mt-1">This text appears right below "I'm Mahad SEO".</p>
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Subtitle</label>
+            <label className="block text-sm font-medium mb-1">Subtitle Description</label>
             <textarea 
               value={content.subtitle}
               onChange={e => setContent({...content, subtitle: e.target.value})}
               className="w-full border p-3 rounded-md focus:ring-2 focus:ring-primary outline-none"
-              rows={4}
+              rows={3}
               placeholder="Brief description about yourself..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Hero Image</label>
+            <label className="block text-sm font-medium mb-2">Hero Profile Image</label>
             <div className="flex items-start gap-6">
-              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-gray-100">
+              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100 flex-shrink-0">
                 <img src={content.image} alt="Hero Preview" className="w-full h-full object-cover" />
               </div>
               <div className="pt-4">
@@ -127,7 +175,7 @@ export default function HeroAdmin() {
                   {uploadingImage ? 'Uploading...' : 'Upload New Image'}
                   <input type="file" className="hidden" accept="image/*" onChange={handleImageSelect} disabled={uploadingImage} />
                 </label>
-                <p className="text-xs text-gray-500 mt-2 max-w-xs">Upload a high-quality square image for best results. It will be displayed in a circle.</p>
+                <p className="text-xs text-gray-500 mt-2 max-w-xs">Upload a high-quality square image. It will crop to a circle automatically.</p>
               </div>
             </div>
           </div>

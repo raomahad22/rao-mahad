@@ -125,8 +125,9 @@ export default function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
+                whileHover={{ scale: 1.05, y: -5, zIndex: 20 }}
                 onClick={() => setSelectedService(service)}
-                className="bg-[#F8F9FA] rounded-2xl p-4 sm:p-5 hover:shadow-lg transition-all duration-300 group cursor-pointer hover:bg-primary hover:text-white"
+                className="bg-[#F8F9FA] rounded-2xl p-4 sm:p-5 hover:shadow-2xl transition-all duration-300 group cursor-pointer hover:bg-primary hover:text-white relative"
               >
                 <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary mb-4 group-hover:bg-accent group-hover:text-white transition-colors">
                   <service.icon className="h-5 w-5" />
